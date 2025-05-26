@@ -1,11 +1,14 @@
 import 'dart:convert';
 
 import 'package:boking_app/app/data/Domain.dart';
+import 'package:boking_app/app/data/serviseAuth.dart';
+import 'package:boking_app/app/modules/home/Model/usermodel,dart';
 import 'package:boking_app/app/modules/home/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthControllerController extends GetxController {
   //TODO: Implement AuthControllerController
@@ -26,6 +29,11 @@ class AuthControllerController extends GetxController {
     if (response.statusCode == 200) {
       // Login successful
       var data = jsonDecode(response.body);
+
+      AuthService.saveLoginData(
+        data['token'],
+        UserModel.fromJson(data['user']),
+      );
       Logger().i(data);
       Get.offAll(HomeView());
     } else {

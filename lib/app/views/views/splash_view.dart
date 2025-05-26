@@ -1,3 +1,4 @@
+import 'package:boking_app/app/data/help.dart';
 import 'package:boking_app/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
 
@@ -12,9 +13,15 @@ class SplashView extends GetView {
 
     homeController.checkLoginStatus();
     return Scaffold(
-      appBar: AppBar(title: const Text('SplashView'), centerTitle: true),
-      body: const Center(
-        child: Text('SplashView is working', style: TextStyle(fontSize: 20)),
+      body: Center(
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: primaryColor,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Image.asset('assets/images/kai_logo.png'),
+        ),
       ),
     );
   }
