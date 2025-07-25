@@ -1,15 +1,12 @@
 import 'package:boking_app/app/data/Domain.dart';
 import 'package:boking_app/app/modules/home/Model/jawalmodel.dart';
 import 'package:boking_app/app/modules/train/views/train_view.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:logger/logger.dart';
 
 class TrainController extends GetxController {
-  //TODO: Implement TrainController
-
   RxList<DataJadawal> jadwal = <DataJadawal>[].obs;
 
   Future<List<DataJadawal>> fetchTrains() async {

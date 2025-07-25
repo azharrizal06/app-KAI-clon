@@ -1,7 +1,7 @@
 import 'package:boking_app/app/Widget/Bottom.dart';
 import 'package:boking_app/app/modules/home/controllers/home_controller.dart';
 import 'package:boking_app/app/modules/train/controllers/train_controller.dart';
-import 'package:boking_app/app/modules/train/views/train_view.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,11 +13,11 @@ class TicketBookingForm extends StatefulWidget {
 }
 
 class _TicketBookingFormState extends State<TicketBookingForm> {
+  HomeController homeController = Get.put(HomeController());
+  TrainController trainController = Get.put(TrainController());
+
   @override
   Widget build(BuildContext context) {
-    HomeController homeController = Get.put(HomeController());
-    TrainController trainController = Get.put(TrainController());
-
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Container(
@@ -45,6 +45,7 @@ class _TicketBookingFormState extends State<TicketBookingForm> {
                         Obx(
                           () => Text(
                             homeController.asal.value,
+                            textAlign: TextAlign.start,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.blue,
@@ -55,11 +56,14 @@ class _TicketBookingFormState extends State<TicketBookingForm> {
                     ),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    homeController.tukarAsalTujuan();
-                  },
-                  child: const Icon(Icons.compare_arrows, color: Colors.blue),
+                Padding(
+                  padding: const EdgeInsets.only(right: 10, left: 10, top: 20),
+                  child: GestureDetector(
+                    onTap: () {
+                      homeController.tukarAsalTujuan();
+                    },
+                    child: const Icon(Icons.compare_arrows, color: Colors.blue),
+                  ),
                 ),
 
                 // Tujuan
@@ -76,6 +80,7 @@ class _TicketBookingFormState extends State<TicketBookingForm> {
                         Obx(
                           () => Text(
                             homeController.tujuan.value,
+                            textAlign: TextAlign.end,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.blue,
@@ -98,18 +103,41 @@ class _TicketBookingFormState extends State<TicketBookingForm> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Tanggal Berangkat"),
+                      const Text(
+                        "Tanggal Berangkat",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(fontSize: 12),
+                      ),
                       const SizedBox(height: 8),
-                      Text(
-                        "20 Jul 2023",
-                        style: TextStyle(
-                          color: Colors.blue[800],
-                          fontWeight: FontWeight.bold,
+                      GestureDetector(
+                        onTap: () async {
+                          final selectedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2100),
+                          );
+
+                          if (selectedDate != null) {
+                            homeController.tanggalBerangkat.value = DateFormat(
+                              'dd-MM-yyyy',
+                            ).format(selectedDate);
+                          }
+                        },
+                        child: Obx(
+                          () => Text(
+                            homeController.tanggalBerangkat.value,
+                            style: TextStyle(
+                              color: Colors.blue[800],
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
+
                 // Pulang Pergi Toggle
                 Column(
                   children: [
@@ -125,41 +153,63 @@ class _TicketBookingFormState extends State<TicketBookingForm> {
                         ),
                       ),
                     ),
-                    const Text("Pulang Pergi"),
+                    const Text("Pulang Pergi", style: TextStyle(fontSize: 8)),
                   ],
                 ),
                 // Tanggal Kembali
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        "Tanggal Kembali",
-                        style: TextStyle(
-                          color:
-                              homeController.isRoundTrip.value
-                                  ? Colors.black
-                                  : Colors.grey.shade400,
+                Obx(
+                  () => Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "Tanggal Kembali",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color:
+                                homeController.isRoundTrip.value == true
+                                    ? Colors.black
+                                    : Colors.grey.shade400,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "20 Jul 2023",
-                        style: TextStyle(
-                          color:
-                              homeController.isRoundTrip.value
-                                  ? Colors.black
-                                  : Colors.grey.shade400,
+                        const SizedBox(height: 8),
+                        GestureDetector(
+                          onTap: () async {
+                            if (homeController.isRoundTrip.value == true) {
+                              final selectedDate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(2000),
+                                lastDate: DateTime(2100),
+                              );
+
+                              if (selectedDate != null) {
+                                homeController.tanggalPulang.value = DateFormat(
+                                  'dd-MM-yyyy',
+                                ).format(selectedDate);
+                              }
+                            }
+                          },
+                          child: Obx(
+                            () => Text(
+                              homeController.tanggalPulang.value,
+                              style: TextStyle(
+                                color:
+                                    homeController.isRoundTrip.value == true
+                                        ? Colors.blue[800]
+                                        : Colors.grey.shade400,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
-
             const Divider(height: 32),
-
             // Kelas & Penumpang
             Row(
               children: [

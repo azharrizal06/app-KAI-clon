@@ -24,8 +24,10 @@ class HomeController extends GetxController {
     }
   }
 
-  RxString asal = "Pilih Stasiun Asal".obs;
-  RxString tujuan = "Pilih Stasiun Tujuan".obs;
+  RxString asal = " Stasiun Asal".obs;
+  RxString tujuan = " Stasiun Tujuan".obs;
+  RxString tanggalBerangkat = " pilih tanggal".obs;
+  RxString tanggalPulang = " pilih tanggal".obs;
   RxBool isRoundTrip = false.obs;
 
   void setAsal(String value) {
@@ -70,6 +72,7 @@ class HomeController extends GetxController {
                     subtitle: const Text("Detail Kereta"),
                     trailing: const Icon(Icons.arrow_forward),
                     onTap: () {
+                      Logger().i(namaKereta.id);
                       Navigator.pop(context, namaKereta.name);
                     },
                   );
